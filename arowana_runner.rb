@@ -10,12 +10,12 @@ target_dir = './arowana'
 
 
 if ! Dir.exist?(target_dir)
-    p 'cloning the project from git repo...'
+    p 'cloning dir from github repo...'
     g = Git.clone(git_repo, target_dir)
 else
-    p 'clean up the old repo found in local...'
+    'old dir found, removing it...'
     FileUtils.remove_entry(target_dir)
-    p 'cloning the project from git repo...'
+    p 'cloning dir from github repo...'
     g = Git.clone(git_repo, target_dir)
 end
 
@@ -28,11 +28,10 @@ Dir.chdir('./arowana') do
         process.include?('postgres')
     }
     if pg_service.empty?
-        p 'please check your postgresql service if it is running, exiting...'
-        exit(1)
-    else
-        p 'ready to start your Arowana App in C9.io[as this is c9.io example]'
-        p 'in your local, you can type rackup config.ru directly to start'
-        `rackup config.ru -p $PORT -o $IP`
+        p 'postgresql process is not found, will help you start postgresql service...'
+        `sudo service postgresql start`
     end
+    
+    p 'ready to start your Arowana App...'
+    `rackup config.ru -p $PORT -o $IP`
 end
